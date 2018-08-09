@@ -1,0 +1,8 @@
+.vscode
+Include
+Lib
+Scripts
+pyvenv.cfg
+.pylintrc
+__pycache__
+database.db
