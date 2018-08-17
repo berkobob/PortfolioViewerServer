@@ -27,23 +27,16 @@ class sqlitedb():
             return e
 
     def add(self, stock):
-        print(stock['port'])
-        print(stock['name'])
+        cols = ', '.join(stock.keys())
+        place = ':'+',:'.join(stock.keys())
+        sql = "INSERT OR REPLACE INTO stocks(%s) VALUES(%s)" % (cols, place)
 
         try:
-            self.c.execute("INSERT OR REPLACE INTO stocks(              \
-                port, name, ticker, shares, price, exchange) \
-                VALUES (?, ?, ?, ?, ?, ?)", (
-                stock['port'],
-                stock['name'],
-                stock['ticker'],
-                stock['shares'],
-                stock['price'],
-                stock['exchange'],
-            ))
+            self.c.execute(sql, stock)
             self.db.commit()
         except Exception as e:
             self.db.rollback()
+            print("sqlitedb: "+str(e))
             return e
 
     def update(self):

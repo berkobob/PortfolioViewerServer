@@ -4,6 +4,7 @@
 
 from flask import Blueprint, jsonify, abort, request
 from data import data
+from server import controller
 
 api = Blueprint('api', __name__)
 
@@ -20,17 +21,30 @@ def add_port():
 
     e = data.new(port)
     if e:
-        print(e)
+        print("api: "+str(e))
         return jsonify({'result': e.__str__(), 'port': port}), 400
     return jsonify({'result': 'success', 'create': port}), 201
+
 
 @api.route('/add', methods=['POST'])
 def add_stock():
     if not request.json or not 'port' in request.json:
         abort(400)
 
-    e = data.add(request.json)
+    e = controller.add_stock(request.json)
+    #e = data.add(request.json)
+
     if e:
         print (e) 
-        return jsonify({'result': e.__str__(), 'stock': request.json['name']}), 400
-    return jsonify({'result': 'success', 'stock': request.json['name']}), 201
+        return jsonify({'result': e.__str__(), 'stock': request.json['ticker']}), 400
+    return jsonify({'result': 'success', 'stock': request.json['ticker']}), 201
+
+
+@api.route('/load', methods=['POST'])
+def load_port():
+    if not request.json or not 'port' in request.json:
+        abort(400)
+
+    controller.load_port(request.json['port'], request.json['stocks'])
+
+    return jsonify({'result': 'success', 'port': request.json['port']}), 201
