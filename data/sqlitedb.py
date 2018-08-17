@@ -26,8 +26,25 @@ class sqlitedb():
             self.db.rollback()
             return e
 
-    def add(self):
-        pass
+    def add(self, stock):
+        print(stock['port'])
+        print(stock['name'])
+
+        try:
+            self.c.execute("INSERT OR REPLACE INTO stocks(              \
+                port, name, ticker, shares, price, exchange) \
+                VALUES (?, ?, ?, ?, ?, ?)", (
+                stock['port'],
+                stock['name'],
+                stock['ticker'],
+                stock['shares'],
+                stock['price'],
+                stock['exchange'],
+            ))
+            self.db.commit()
+        except Exception as e:
+            self.db.rollback()
+            return e
 
     def update(self):
         pass

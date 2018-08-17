@@ -5,5 +5,4 @@
 import server.app as server
 from data import data
 
-data.new("Test1")
 server.run(debug=True)
