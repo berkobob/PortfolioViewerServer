@@ -3,11 +3,10 @@ from data import data
 names = ['port', 'name', 'ticker', 'shares', 'price', 'exchange']
 
 def load_port(port, stocks):
-    print(f'loading port {port}')
     for stock in stocks:
         stock.insert(0, port)
         stock = dict(zip(names, stock))
-        print(stock)
+
 
 def add_stock(stock):
     stock['name'] = stock['ticker']

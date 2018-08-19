@@ -48,3 +48,21 @@ def load_port():
     controller.load_port(request.json['port'], request.json['stocks'])
 
     return jsonify({'result': 'success', 'port': request.json['port']}), 201
+
+
+@api.route('/ports', methods=['GET'])
+def get_ports():
+    ports = data.ports()
+    try:
+        return jsonify({"result": 'success', 'ports': ports}), 200
+    except Exception as e:
+        return jsonify({"result": ports.__str__()}), 500
+
+
+@api.route('/<port>', methods=['GET'])
+def get_stocks(port):
+    stocks = data.stocks(port)
+    try:
+        return jsonify({'result': 'success', 'port': port, 'stocks': stocks}), 200
+    except Exception as e:
+        return jsonify({'result': stocks.__str__()})

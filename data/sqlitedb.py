@@ -36,7 +36,6 @@ class sqlitedb():
             self.db.commit()
         except Exception as e:
             self.db.rollback()
-            print("sqlitedb: "+str(e))
             return e
 
     def update(self):
@@ -45,6 +44,20 @@ class sqlitedb():
     def delete(self):
         pass
 
+    def ports(self):
+        try:
+            self.c.execute("SELECT * FROM ports")
+            ports = self.c.fetchall()
+            return ports
+        except Exception as e:
+            return e
+
+    def stocks(self, port):
+        try:
+            self.c.execute("SELECT * FROM stocks WHERE port=?", (port,))
+            return(self.c.fetchall())
+        except Exception as e:
+            return e
  
 if __name__ == '__main__':
-    sqlitedb()
+    db = sqlitedb()
