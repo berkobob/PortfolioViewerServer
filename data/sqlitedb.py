@@ -20,7 +20,7 @@ class sqlitedb():
 
     def new(self, port):
         try:
-            self.c.execute("INSERT INTO ports values (?, 0.0, 0.0)", (port,))
+            self.c.execute("INSERT OR REPLACE INTO ports values (?, 0.0, 0.0)", (port,))
             self.db.commit()
         except Exception as e:
             self.db.rollback()
@@ -41,9 +41,6 @@ class sqlitedb():
     def update(self):
         pass
 
-    def delete(self):
-        pass
-
     def ports(self):
         try:
             self.c.execute("SELECT * FROM ports")
@@ -58,6 +55,27 @@ class sqlitedb():
             return(self.c.fetchall())
         except Exception as e:
             return e
+
+    def del_port(self, port):
+        try:
+            self.c.execute("DELETE FROM ports WHERE port=?", (port,))
+            self.db.commit()
+        except Exception as e:
+            self.db.rollback()
+            return e
+        
+        return self.del_stock(port, '*')
+
+
+    def del_stock(self, port, stock):
+        try:
+            self.c.execute("DELETE FROM stocks WHERE port=? AND name=?", 
+                (port, stock))
+            self.db.commit()
+        except Exception as e:
+            self.db.rollback()
+            return e
+
  
 if __name__ == '__main__':
     db = sqlitedb()

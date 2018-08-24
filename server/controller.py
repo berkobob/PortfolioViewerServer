@@ -2,11 +2,12 @@ from data import data
 
 names = ['port', 'name', 'ticker', 'shares', 'price', 'exchange']
 
+"""
 def load_port(port, stocks):
     for stock in stocks:
         stock.insert(0, port)
         stock = dict(zip(names, stock))
-
+"""
 
 def add_stock(stock):
     stock['name'] = stock['ticker']
@@ -28,3 +29,21 @@ def add_stock(stock):
 
     e = data.add(stock)
     return e
+
+def load_port(port, f):
+    try:
+        with open(f) as file:
+            file.readline()  # discard header row
+            for row in file:
+                stock = row.rstrip('\n').split(',')
+                stock.insert(0, port)
+                stock = dict(zip(['port', 'ticker', 'shares', 'price', 'exchange'], stock))
+                e = add_stock(stock)
+    except Exception as e:
+        print("controller: ", str(e))
+        return(str(e))
+
+    e = data.new(port)
+    
+def sort_port(port, col):
+    print(f"sorting port {port} on column {col}")

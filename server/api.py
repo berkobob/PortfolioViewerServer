@@ -21,10 +21,8 @@ def add_port():
 
     e = data.new(port)
     if e:
-        print("api: "+str(e))
         return jsonify({'result': e.__str__(), 'port': port}), 400
-    return jsonify({'result': 'success', 'create': port}), 201
-
+    return jsonify({'result': 'success', 'created': port}), 201
 
 @api.route('/add', methods=['POST'])
 def add_stock():
@@ -37,18 +35,16 @@ def add_stock():
     if e:
         print (e) 
         return jsonify({'result': e.__str__(), 'stock': request.json['ticker']}), 400
-    return jsonify({'result': 'success', 'stock': request.json['ticker']}), 201
+    return jsonify({'result': 'success', 'added': request.json['ticker']}), 201
 
-
-@api.route('/load', methods=['POST'])
+@api.route('/toad', methods=['POST'])  # changed load to toad because this method not used?
 def load_port():
     if not request.json or not 'port' in request.json:
         abort(400)
 
     controller.load_port(request.json['port'], request.json['stocks'])
 
-    return jsonify({'result': 'success', 'port': request.json['port']}), 201
-
+    return jsonify({'result': 'success', 'loaded': request.json['port']}), 201
 
 @api.route('/ports', methods=['GET'])
 def get_ports():
@@ -58,7 +54,6 @@ def get_ports():
     except Exception as e:
         return jsonify({"result": ports.__str__()}), 500
 
-
 @api.route('/<port>', methods=['GET'])
 def get_stocks(port):
     stocks = data.stocks(port)
@@ -66,3 +61,24 @@ def get_stocks(port):
         return jsonify({'result': 'success', 'port': port, 'stocks': stocks}), 200
     except Exception as e:
         return jsonify({'result': stocks.__str__()})
+
+@api.route('/del', methods=['POST'])
+def delete():
+    if not request.json or not 'port' in request.json:
+        abort(400)
+
+    port = request.json['port']
+    stocks = request.json['stock']
+
+    if len(stocks) == 0:
+        e = data.del_port(port)
+        if e:
+            return jsonify({'result': e.__str__(), 'port': port}), 400
+        return jsonify({'result': 'success', 'deleted': port}), 201
+    
+    for stock in stocks:
+        print("OK, lets delete", stock)
+        e = data.del_stock(port, stock)
+        if e:
+            print(e.text)
+    return jsonify({"result": 'success', 'stocks': stocks})

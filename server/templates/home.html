@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block head1 %}
+<div class="w3-right">
+        <button onclick="document.getElementById('id03').style.display='block'" class="w3-bar-item w3-button w3-mobile w3-hide-small">LOAD</button>
+        <button onclick="document.getElementById('id02').style.display='block'" class="w3-bar-item w3-button w3-mobile w3-hide-small">NEW</button>
+</div>
+{% endblock %}
+{% block head2 %}
+<a href="/load/" class="w3-bar-item w3-button w3-mobile w3-hide-small">LOAD</a>
+<button onclick="document.getElementById('id02').style.display='block'" class="w3-bar-item w3-button w3-mobile">NEW</button>
+{% endblock %}
+
+{% block main %}
+<table class="w3-table-all">
+    <tr>
+        <th>PORTFOLIO</th>
+        <th class="w3-right-align">VALUE</th>
+        <th class="w3-right-align">CHANGE</th>
+        <th class="w3-center">DELETE</th>
+    </tr>
+    {% for port in ports %}
+        <tr>
+            <th><a style="text-decoration: none;" href="/{{ port[0] }}/">{{ port[0] }}</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port[0] }}/">{{ port[1] }}</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port[0] }}/">{{ port[2] }}</a></th>
+            <th class="w3-center"><a class="w3-ul" onclick="return confirm('Delete {{port[0]}} portfolio?')" href="/del/{{port[0]}}"><i class="fa fa-trash"></i></a></th>
+        </tr>
+    {% endfor%}
+
+
+<!-- Modals -->
+<div id="id02" class="w3-modal">
+    <div class="w3-modal-content w3-card-4">
+        <header class="w3-container w3-blue"> 
+            <h2>Create new portfolio</h2>
+        </header>
+        <form action="/" method="post" class="w3-container">
+            <br>
+            <label>Name:</label>
+            <input class="w3-input w3-border" type="text" id="name" name="name"> 
+            <br>
+            <div class="w3-container">
+                <button class="w3-button w3-hover-green w3-round-large" type="submit" onclick="document.getElementById('id02').style.display='none'">Submit</button>
+                <button class="w3-button w3-hover-red w3-round-large" type="button" onclick="document.getElementById('id02').style.display='none'">Cancel</button>
+            </div>
+            <br>
+        </form>
+    </div>
+</div>
+
+<div id="id03" class="w3-modal">
+    <div class="w3-modal-content w3-card-4">
+        <header class="w3-container w3-blue"> 
+            <h2>Load a portfolio</h2>
+        </header>
+        <br>
+        <form action="/load/" method="POST" class="w3-container" enctype = "multipart/form-data">
+            <input type="file" name="file" class="w3-input w3-button w3-round-large" />
+            <br>
+            <label>Name:</label>
+            <input class="w3-input w3-border" type="text" id="name" name="name"> 
+            <br>
+            <button class="w3-button w3-hover-green w3-round-large" type="submit" onclick="document.getElementById('id03').style.display='none'">Submit</button>
+            <button class="w3-button w3-hover-red w3-round-large" type="button" onclick="document.getElementById('id03').style.display='none'">Cancel</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

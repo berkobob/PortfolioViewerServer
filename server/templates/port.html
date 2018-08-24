@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block head1 %}
+<div class="w3-right">
+    <button onclick="document.getElementById('id01').style.display='block'" class="w3-bar-item w3-button w3-mobile w3-hide-small">ADD</button>
+    <a class="w3-bar-item w3-button w3-mobile w3-hide-small" href="/update/{{page}}">UPDATE</a>
+</div>
+{% endblock %}
+{% block head2 %}
+    <button onclick="document.getElementById('id01').style.display='block'" class="w3-bar-item w3-button w3-mobile">ADD</button>
+    <a class="w3-bar-item w3-button w3-mobile" href="/update/{{page}}">UPDATE</a>
+{% endblock %}
+{% block main %}
+    <table class="w3-table-all">
+        <tr>
+            <th><a style="text-decoration: none;" class="mine" href="/{{page}}/name/">TICKER</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/shares/">SHARES</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/price/">PRICE</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/last/">LAST</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/delta/">CHANGE</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/percent/">%</a></th>
+            <th class="w3-right-align">TIME</th>
+            <th class="w3-center"><i class="fa"></i></th>
+        </tr>
+        {% for ticker in tickers %}
+            <tr>
+                <td>{{ ticker[1] }}</th>
+                <td class="w3-right-align">{{ ticker[3] }}</td>
+                <td class="w3-right-align">{{ ticker[4] }}</td>
+                <td class="w3-right-align">{{ ticker[6] }}</td>
+                <td class="w3-right-align">{{ ticker[7] }}</td>
+                <td class="w3-right-align">{{ ticker[8] }}</td>
+                <td class="w3-right-align">{{ ticker[9] }}</td>
+                <td class="w3-center"><a onclick="return confirm('Delete {{ stock }}')" href="/del/{{page}}/{{ticker.name}}" ><i class="fa fa-trash"></i></a></td>
+            </tr>
+        {% endfor%}
+    </table>
+
+    <div id="id01" class="w3-modal">
+            <div class="w3-modal-content w3-card-4">
+                <header class="w3-container w3-blue"> 
+                    <h2>Add ticker to {{page}}</h2>
+                </header>
+                <form action="/add/{{page}}" method="post" class="w3-container">
+                    <label>Ticker</label>
+                    <input class="w3-input w3-border" type="text" name="ticker"> 
+                    <label>Shares</label>
+                    <input class="w3-input w3-border" type="number" name="shares"> 
+                    <label>Price</label>
+                    <input class="w3-input w3-border" type="number" name="price"> 
+                    <label>Exchange</label>
+                    <select class="w3-select" name="exchange">
+                        <option value="NASDAQ">NASDAQ</option>
+                        <option value="NYSE">NYSE</option>
+                        <option value="LSE">LSE</option>
+                    </select>
+                    <br><br>
+                    <div class="w3-container">
+                        <button class="w3-button w3-hover-green w3-round-large" type="submit" onclick="document.getElementById('id01').style.display='none'">Submit</button>
+                        <button class="w3-button w3-hover-red w3-round-large" type="button" onclick="document.getElementById('id01').style.display='none'">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}
