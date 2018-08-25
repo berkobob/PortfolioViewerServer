@@ -2,13 +2,6 @@ from data import data
 
 names = ['port', 'name', 'ticker', 'shares', 'price', 'exchange']
 
-"""
-def load_port(port, stocks):
-    for stock in stocks:
-        stock.insert(0, port)
-        stock = dict(zip(names, stock))
-"""
-
 def add_stock(stock):
     stock['name'] = stock['ticker']
     stock['last'] = "0.0"
@@ -41,9 +34,12 @@ def load_port(port, f):
                 e = add_stock(stock)
     except Exception as e:
         print("controller: ", str(e))
-        return(str(e))
+        return e
 
     e = data.new(port)
+    if e:
+        return e
+
+    e = data._update_new_port(port)
+    return e
     
-def sort_port(port, col):
-    print(f"sorting port {port} on column {col}")

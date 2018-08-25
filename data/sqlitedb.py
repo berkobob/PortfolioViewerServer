@@ -6,7 +6,8 @@ class sqlitedb():
 
     def __init__(self):
         try:
-            self.db = sqlite3.connect("data/database.db", check_same_thread=False)
+            self.db = sqlite3.connect("data/database.db", 
+                check_same_thread=False)
             self.c = self.db.cursor()
             for table in tables:
                 self.c.execute(table)
@@ -20,7 +21,8 @@ class sqlitedb():
 
     def new(self, port):
         try:
-            self.c.execute("INSERT OR REPLACE INTO ports values (?, 0.0, 0.0)", (port,))
+            self.c.execute("INSERT OR REPLACE INTO ports(port) values(?)", 
+                (port,))
             self.db.commit()
         except Exception as e:
             self.db.rollback()
@@ -59,13 +61,13 @@ class sqlitedb():
     def del_port(self, port):
         try:
             self.c.execute("DELETE FROM ports WHERE port=?", (port,))
+            self.c.execute("DELETE FROM stocks WHERE port=?", (port,))
             self.db.commit()
         except Exception as e:
             self.db.rollback()
             return e
         
         return self.del_stock(port, '*')
-
 
     def del_stock(self, port, stock):
         try:
@@ -76,6 +78,24 @@ class sqlitedb():
             self.db.rollback()
             return e
 
- 
+    def _update_new_port(self, port):
+        try:
+            self.c.execute("SELECT * FROM stocks WHERE port=?",(port,))
+            stocks = self.c.fetchall()
+        except Exception as e:
+            return e
+
+        count = 0
+        paid = 0
+        for stock in stocks:
+            count += 1
+            paid += stock[3] * stock[4]
+
+        try:
+            self.c.execute("UPDATE ports SET positions = ?, paid = ? WHERE port=?",(count, paid, port))
+        except Exception as e:
+            return e
+
+
 if __name__ == '__main__':
     db = sqlitedb()

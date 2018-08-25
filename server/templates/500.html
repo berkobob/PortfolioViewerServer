@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block head1 %}
+<div class="w3-right">
+        <button onclick="document.getElementById('id03').style.display='block'" class="w3-bar-item w3-button w3-mobile w3-hide-small">LOAD</button>
+        <button onclick="document.getElementById('id02').style.display='block'" class="w3-bar-item w3-button w3-mobile w3-hide-small">NEW</button>
+</div>
+{% endblock %}
+{% block head2 %}
+<a href="/load/" class="w3-bar-item w3-button w3-mobile w3-hide-small">LOAD</a>
+<button onclick="document.getElementById('id02').style.display='block'" class="w3-bar-item w3-button w3-mobile">NEW</button>
+{% endblock %}
+
+{% block main %}
+
+<h1>Something has gone terrible wrong:</h1>
+{{ message }}
+
+{% endblock %}
