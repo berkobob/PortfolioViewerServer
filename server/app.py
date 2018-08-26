@@ -2,8 +2,8 @@
 09/08/18 - Portfolio Viewer Server
 The web interface to the data model
 """
-import os
-from flask import Flask, request, render_template, redirect, flash
+import os, copy
+from flask import Flask, request, render_template, redirect, flash, url_for
 from server.api import api
 from data import data
 from server import controller
@@ -16,27 +16,35 @@ reverse = False
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
-    """ home page. show list of portfolios and their values """
+    """ home page. show list of portfolios and their values 
+        and POST is to create a new port """
     if request.method == 'POST':
         e = data.new(request.form['name'])
         if e:
             flash(str(e))
 
-    ports = data.ports()
+    ports = controller.ports()
     if isinstance(ports, list):
-        return render_template('home.html', ports=data.ports())
-    return str(ports)
+        return render_template('home.html', ports=ports)
+
+    flash(ports)
+    return render_template("500.html")
 
 @app.route('/<port>/', methods=['GET', 'POST'])
 def view_port(port, sort=1):
     if request.method == 'POST':
-        return render_template('home.html'), 500
+        #stock = {k: v[0] for k, v in dict(request.form).items()}
+        stock = request.form.to_dict()
+        stock['port'] = port
+        e = controller.add_stock(stock)
+        if e:
+            flash(str(e))
 
     stocks = data.stocks(port)
     if isinstance(stocks, list):
         stocks.sort(key=lambda stock: stock[sort], reverse=reverse)
         return render_template('port.html', tickers=stocks, page=port)
-    #return render_template('500.html', message=str(stocks)), 500
+
     message = "Failed to load portfolio "+port+" because: "+str(stocks)
     flash(message)
     return redirect('/')

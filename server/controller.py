@@ -1,6 +1,19 @@
 from data import data
 
 names = ['port', 'name', 'ticker', 'shares', 'price', 'exchange']
+port_headers = ['port', 'positions', 'paid', 'last', 'change', 'total', 'delta', 'percent']
+
+def ports():
+    e = data.ports()
+    if not isinstance(e, list):
+        return e
+
+    ports = [dict(zip(port_headers, port)) for port in e]
+
+    for port in ports:
+        port['paid'] = '{:0,.0f}'.format(port['paid'])
+
+    return ports
 
 def add_stock(stock):
     stock['name'] = stock['ticker']
@@ -21,6 +34,10 @@ def add_stock(stock):
         stock['symbol'] = "£"
 
     e = data.add(stock)
+    if e:
+        return e
+
+    e = data._update_new_port(stock['port'])
     return e
 
 def load_port(port, f):

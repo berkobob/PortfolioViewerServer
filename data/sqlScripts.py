@@ -18,12 +18,12 @@ stockTable = """ create table if not exists stocks (
 portTable = """ create table if not exists ports (
     port text PRIMARY KEY,     /* Which portfolio              */
     positions integer,         /* How many stocks in portfolio */
-    paid real,                 /* How much paid for portfolio  */
-    last real,                 /* Current value of port        */
-    change real,               /* Total change in port value   */
-    total real,                /* Total percent change in port */
-    delta real,                /* Change in value today        */
-    percent real               /* Percent change today         */
+    paid real DEFAULT 0.0,     /* How much paid for portfolio  */
+    last real DEFAULT 0.0,     /* Current value of port        */
+    change real DEFAULT 0.0,   /* Total change in port value   */
+    total real DEFAULT 0.0,    /* Total percent change in port */
+    delta real DEFAULT 0.0,    /* Change in value today        */
+    percent real DEFAULT 0.0   /* Percent change today         */
     )
 """
 
