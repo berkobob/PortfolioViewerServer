@@ -21,8 +21,7 @@ class sqlitedb():
 
     def new(self, port):
         try:
-            self.c.execute("INSERT OR REPLACE INTO ports(port) values(?)", 
-                (port,))
+            self.c.execute("INSERT OR REPLACE INTO ports(port) values(?)", (port,))
             self.db.commit()
         except Exception as e:
             self.db.rollback()
@@ -65,9 +64,7 @@ class sqlitedb():
             self.db.commit()
         except Exception as e:
             self.db.rollback()
-            return e
-        
-        return self.del_stock(port, '*')
+            return e      
 
     def del_stock(self, port, stock):
         try:
@@ -87,15 +84,32 @@ class sqlitedb():
 
         count = 0
         paid = 0
+        last = 0.0
+        change = 0.0
+        total = 0.0
+        percent = 0.0
+
         for stock in stocks:
             count += 1
             paid += stock[3] * stock[4]
+            last += stock[3] * stock[6]
+            change += stock[3] * stock[7]
+            
 
         try:
             self.c.execute("UPDATE ports SET positions = ?, paid = ? WHERE port=?",(count, paid, port))
         except Exception as e:
             return e
 
+    def update_stock(self, stock):
+        try:
+            self.c.execute("""UPDATE stocks SET last=?, delta=?, percent=?, stamp=?
+            where port=? AND name=? """,
+            (stock['last'], stock['delta'], stock['percent'], stock['stamp'],
+             stock['port'], stock['name']))
+            self.db.commit()
+        except Exception as e:
+            return e
 
 if __name__ == '__main__':
     db = sqlitedb()

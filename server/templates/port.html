@@ -13,24 +13,24 @@
     <table class="w3-table-all">
         <tr>
             <th><a style="text-decoration: none;" class="mine" href="/{{page}}/1/">TICKER</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/3/">SHARES</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/4/">PRICE</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/6/">LAST</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/7/">CHANGE</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/8/">%</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/9/">TIME</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/shares/">SHARES</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/price/">PRICE</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/last/">LAST</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/delta/">CHANGE</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/percent/">%</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{page}}/stamp/">TIME</a></th>
             <th class="w3-center"><i class="fa"></i></th>
         </tr>
         {% for ticker in tickers %}
             <tr>
-                <td>{{ ticker[1] }}</th>
-                <td class="w3-right-align">{{ ticker[3] }}</td>
-                <td class="w3-right-align">{{ ticker[4] }}</td>
-                <td class="w3-right-align">{{ ticker[6] }}</td>
-                <td class="w3-right-align">{{ ticker[7] }}</td>
-                <td class="w3-right-align">{{ ticker[8] }}</td>
-                <td class="w3-right-align">{{ ticker[9] }}</td>
-                <td class="w3-center"><a onclick="return confirm('Delete {{ stock }}')" href="/del/{{page}}/{{ticker.name}}" ><i class="fa fa-trash"></i></a></td>
+                <td>{{ ticker['name'] }}</th>
+                <td class="w3-right-align">{{ ticker['shares'] }}</td>
+                <td class="w3-right-align">{{ ticker['price'] }}</td>
+                <td class="w3-right-align">{{ ticker['last'] }}</td>
+                <td class="w3-right-align">{{ ticker['delta'] }}</td>
+                <td class="w3-right-align">{{ ticker['percent'] }}</td>
+                <td class="w3-right-align">{{ ticker['stamp'] }}</td>
+                <td class="w3-center"><a onclick="return confirm('Delete {{ ticker[1] }}')" href="/del/{{page}}/{{ticker[1]}}" ><i class="fa fa-trash"></i></a></td>
             </tr>
         {% endfor%}
     </table>

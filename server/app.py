@@ -31,16 +31,15 @@ def main():
     return render_template("500.html")
 
 @app.route('/<port>/', methods=['GET', 'POST'])
-def view_port(port, sort=1):
+def view_port(port, sort='name'):
     if request.method == 'POST':
-        #stock = {k: v[0] for k, v in dict(request.form).items()}
         stock = request.form.to_dict()
         stock['port'] = port
         e = controller.add_stock(stock)
         if e:
             flash(str(e))
 
-    stocks = data.stocks(port)
+    stocks = controller.get_port(port)
     if isinstance(stocks, list):
         stocks.sort(key=lambda stock: stock[sort], reverse=reverse)
         return render_template('port.html', tickers=stocks, page=port)
@@ -70,4 +69,20 @@ def del_port(port):
 def sort_port(port, col):
     global reverse 
     reverse = not reverse
-    return view_port(port, int(col))
+    return view_port(port, col)
+
+@app.route('/del/<port>/<stock>/', methods=['GET'])
+def del_stock(port, stock):
+    e = data.del_stock(port, stock)
+    if e:
+        flash(str(e))
+    #return "OK, I'll delete {} from {}".format(stock, port)
+    return view_port(port)
+
+@app.route('/update/<port>', methods=['GET'])
+def update(port):
+    e = controller.update(port)
+    if e:
+        for msg in e:
+            flash(str(e))
+    return view_port(port)

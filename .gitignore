@@ -7,3 +7,4 @@ pyvenv.cfg
 __pycache__
 database.db
 *.db-journal
+*.csv

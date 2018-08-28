@@ -1,15 +1,15 @@
 stockTable = """ create table if not exists stocks (
-    port text NOT NULL,        /* Which portfolio              */
-    name text NOT NULL,        /* Raw ticker name              */
-    ticker text NOT NULL,      /* Ticker used for update       */
-    shares integer NOT NULL,   /* How many shares              */
-    price real NOT NULL,       /* Average purchase price       */
-    exchange text NOT NULL,    /* LSE, NASDAQ, etc             */
-    last real,                 /* Last price                   */
-    delta real,                /* Size of change in price      */
-    percent real,              /* Size of change in percent    */
-    stamp numeric,             /* Date and time of last update */
-    symbol text,               /* GBP, USD, ETC                */
+    port text NOT NULL,        /* 0 Which portfolio              */
+    name text NOT NULL,        /* 1 Raw ticker name              */
+    ticker text NOT NULL,      /* 2 Ticker used for update       */
+    shares integer NOT NULL,   /* 3 How many shares              */
+    price real NOT NULL,       /* 4 Average purchase price       */
+    exchange text NOT NULL,    /* 5 LSE, NASDAQ, etc             */
+    last real,                 /* 6 Last price                   */
+    delta real,                /* 7 Size of change in price      */
+    percent real,              /* 8 Size of change in percent    */
+    stamp numeric,             /* 9 Date and time of last update */
+    symbol text,               /* 10 GBP, USD, ETC                */
     FOREIGN KEY (port) REFERENCES ports(port),
     PRIMARY KEY (port, name)
     )
