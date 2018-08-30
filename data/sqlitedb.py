@@ -1,115 +1,111 @@
+"""
+29-08-18: Antoine Lever - Portfolio Viewer
+          Model implementation and API using sqlite3
+          API should contain database methods only and use dicts
+"""
+
 import sqlite3
-from sqlite3 import Error
-from data.sqlScripts import tables
+from data.sqlScripts import tables, cols, sql
+from flask import flash
+
 
 class sqlitedb():
 
     def __init__(self):
         try:
-            self.db = sqlite3.connect("data/database.db", 
-                check_same_thread=False)
+            self.db = sqlite3.connect("data/database.db",
+                                      check_same_thread=False)
             self.c = self.db.cursor()
             for table in tables:
                 self.c.execute(table)
-                self.db.commit()
-        except Error as e:
-            print(e)
+            self.db.commit()
+        except sqlite3.Error as e:
             self.db.rollback()
-        
+
     def __del__(self):
         self.db.close()
 
     def new(self, port):
+        """ Create a new and empty portfolio """
         try:
-            self.c.execute("INSERT OR REPLACE INTO ports(port) values(?)", (port,))
+            self.c.execute(sql['new'], (port,))
             self.db.commit()
-        except Exception as e:
+        except sqlite3.Error as e:
             self.db.rollback()
-            return e
+            flash("Can't create new portfolio in db because "+str(e))
 
     def add(self, stock):
+        """ Add a stock to an existing portfolio """
         cols = ', '.join(stock.keys())
         place = ':'+',:'.join(stock.keys())
-        sql = "INSERT OR REPLACE INTO stocks(%s) VALUES(%s)" % (cols, place)
+        add = sql['add'] % (cols, place)
 
         try:
-            self.c.execute(sql, stock)
+            self.c.execute(add, stock)
             self.db.commit()
-        except Exception as e:
+        except sqlite3.Error as e:
             self.db.rollback()
-            return e
+            flash("Can't add stock to db because "+str(e))
 
-    def update(self):
-        pass
+    def update_port(self, port):
+        """ update port values based on updated stock values """
+        cols = ', '.join(port.keys())
+        place = ':'+',:'.join(port.keys())
+        upd = sql['upd_port'] % (cols, place)
+        
+        try:
+            self.c.execute(upd, port)
+            self.db.commit()
+        except sqlite3.Error as e:
+            self.db.rollback()
+            flash("Can't update port in db because "+str(e))
 
     def ports(self):
+        """ Return a list of port dicts """
         try:
             self.c.execute("SELECT * FROM ports")
             ports = self.c.fetchall()
-            return ports
-        except Exception as e:
-            return e
+            return [dict(zip(cols['port'], port)) for port in ports]
+        except sqlite3.Error as e:
+            flash("Can't get ports becuase "+str(e))
 
     def stocks(self, port):
+        """ Return a list of stock dicts """
         try:
-            self.c.execute("SELECT * FROM stocks WHERE port=?", (port,))
-            return(self.c.fetchall())
-        except Exception as e:
-            return e
+            self.c.execute(sql['stocks'], (port,))
+            port = self.c.fetchall()
+            return [dict(zip(cols['stock'], stock)) for stock in port]
+        except sqlite3.Error as e:
+            flash("Can't get stocks because "+str(e))
 
     def del_port(self, port):
+        """ del a port from ports and stocks tables """
         try:
-            self.c.execute("DELETE FROM ports WHERE port=?", (port,))
-            self.c.execute("DELETE FROM stocks WHERE port=?", (port,))
+            self.c.execute(sql['del_port'], (port,))
+            self.c.execute(sql['del_stocks'], (port,))
             self.db.commit()
-        except Exception as e:
+        except sqlite3.Error as e:
             self.db.rollback()
-            return e      
+            flash("Can't delete port because "+str(e))
 
     def del_stock(self, port, stock):
+        """ del one stock from a port """
         try:
-            self.c.execute("DELETE FROM stocks WHERE port=? AND name=?", 
-                (port, stock))
+            self.c.execute(sql['del_stock'], (port, stock))
             self.db.commit()
-        except Exception as e:
+        except sqlite3.Error as e:
             self.db.rollback()
-            return e
-
-    def _update_new_port(self, port):
-        try:
-            self.c.execute("SELECT * FROM stocks WHERE port=?",(port,))
-            stocks = self.c.fetchall()
-        except Exception as e:
-            return e
-
-        count = 0
-        paid = 0
-        last = 0.0
-        change = 0.0
-        total = 0.0
-        percent = 0.0
-
-        for stock in stocks:
-            count += 1
-            paid += stock[3] * stock[4]
-            last += stock[3] * stock[6]
-            change += stock[3] * stock[7]
-            
-
-        try:
-            self.c.execute("UPDATE ports SET positions = ?, paid = ? WHERE port=?",(count, paid, port))
-        except Exception as e:
-            return e
+            flash("Can't delete stock because "+str(e))
 
     def update_stock(self, stock):
+        """ update stock values """
         try:
-            self.c.execute("""UPDATE stocks SET last=?, delta=?, percent=?, stamp=?
-            where port=? AND name=? """,
-            (stock['last'], stock['delta'], stock['percent'], stock['stamp'],
-             stock['port'], stock['name']))
+            self.c.execute(sql['upd_stock'],
+                           (stock['last'], stock['delta'], stock['percent'],
+                           stock['stamp'], stock['port'], stock['name']))
             self.db.commit()
         except Exception as e:
-            return e
+            flash("Can't update stock in db because "+str(e))
 
 if __name__ == '__main__':
     db = sqlitedb()

@@ -16,11 +16,12 @@
         <th>PORTFOLIO</th>
         <th class="w3-center">POSITIONS</th>
         <th class="w3-right-align">PAID</th>
-        <th class="w3-right-align">LAST</th>
+        <th class="w3-right-align">VALUE</th>
         <th class="w3-right-align">CHANGE</th>
-        <th class="w3-right-align">TOTAL</th>
+        <th class="w3-right-align">TOTAL %</th>
         <th class="w3-right-align">DELTA</th>
-        <th class="w3-right-align">PERCENT</th>
+        <th class="w3-right-align">%PAID</th>
+        <th class="w3-right-align">%VAL </th>
         <th class="w3-center">DELETE</th>
     </tr>
     {% for port in ports %}
@@ -28,12 +29,13 @@
             <th><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['port'] }}</a></th>
             <th class="w3-center"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['positions'] }}</a></th>
             <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">£{{ port['paid'] }}</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['last'] }}</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['value'] }}</a></th>
             <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['change'] }}</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['total'] }}</a></th>
-            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['delta'] }}</a></th>
             <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['percent'] }}</a></th>
-            <th class="w3-center"><a class="w3-ul" onclick="return confirm('Delete portfolio {{ port['port'] }} ?')" href="/del/{{port['port']}}"><i class="fa fa-trash"></i></a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['delta'] }}</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['pofpaid'] }}</a></th>
+            <th class="w3-right-align"><a style="text-decoration: none;" href="/{{ port['port'] }}/">{{ port['pofval'] }}</a></th>
+            <th class="w3-center"><a class="w3-ul" onclick="return confirm('Delete portfolio {{ port['port'] }}?')" href="/del/{{port['port']}}"><i class="fa fa-trash"></i></a></th>
         </tr>
     {% endfor%}
 

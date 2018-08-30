@@ -30,7 +30,7 @@
                 <td class="w3-right-align">{{ ticker['delta'] }}</td>
                 <td class="w3-right-align">{{ ticker['percent'] }}</td>
                 <td class="w3-right-align">{{ ticker['stamp'] }}</td>
-                <td class="w3-center"><a onclick="return confirm('Delete {{ ticker[1] }}')" href="/del/{{page}}/{{ticker[1]}}" ><i class="fa fa-trash"></i></a></td>
+                <td class="w3-center"><a onclick="return confirm('Delete {{ ticker['name'] }}?')" href="/del/{{page}}/{{ticker['name']}}" ><i class="fa fa-trash"></i></a></td>
             </tr>
         {% endfor%}
     </table>
