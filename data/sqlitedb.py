@@ -52,7 +52,7 @@ class sqlitedb():
         cols = ', '.join(port.keys())
         place = ':'+',:'.join(port.keys())
         upd = sql['upd_port'] % (cols, place)
-        
+
         try:
             self.c.execute(upd, port)
             self.db.commit()
