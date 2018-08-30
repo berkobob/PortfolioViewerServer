@@ -16,8 +16,10 @@ def update_price(stock):
             stock['last'] /= 100
         delta, percent = price[1].get_text().split(' ')
         stock['delta'] = float(delta)
-        stock['percent'] = float(percent.replace('(', '').replace(')', ''
-                                                    ).replace('%', ''))
+        if stock['exchange'] == 'LSE':
+            stock['delta'] /= 100
+        stock['percent'] = float(percent.replace('(', '').replace(')', '')
+                                                         .replace('%', ''))
     else:
         msg = "{} failed to update".format(stock['name'])
         flash(msg)

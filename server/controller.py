@@ -53,7 +53,7 @@ def add_stock(stock):
 
 
 def load_port(port, f):
-    """ import a file of raw stock data and make a port full of these stocks """
+    """ import a file of raw stock data and make port full of these stocks """
     try:
         with open(f) as file:
             file.readline()  # discard header row
@@ -89,7 +89,7 @@ def get_port(port):
         stock['shares'] = '{:,d}'.format(stock['shares'])
         stock['price'] = '{}{:0,.2f}'.format(stock['symbol'], stock['price'])
         stock['last'] = '{}{:0,.2f}'.format(stock['symbol'], stock['last'])
-        stock['delta'] = '{}{:0,.2f}'.format(stock['symbol'], stock['delta'])
+        stock['delta'] = '{}{:0,.3f}'.format(stock['symbol'], stock['delta'])
         stock['percent'] = '{:0,.2f}%'.format(stock['percent'])
         get_time = re.compile("\d{1,2}:\d{2}[A-Z]{2}\s[A-Z]{3}")
         try:
