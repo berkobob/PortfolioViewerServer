@@ -48,7 +48,7 @@ def add_stock(stock):
     if 'LSE' in stock['exchange']:
         stock['ticker'] = stock['ticker']+"L"
         stock['symbol'] = "£"
-    print(stock)
+
     data.add(stock)
 
 
