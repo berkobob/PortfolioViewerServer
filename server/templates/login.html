@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block main %}
+Login:
+<div class="w3-container">
+    <form id="login-form" action="/login/" method="post" class="w3-container">
+        <br>
+        <label>Username:</label>
+        <input class="w3-input w3-border" type="text" name="username"> 
+        <br>
+        <label>Password:</label>
+        <input class="w3-input w3-border" type="password" name="password"> 
+        <br>
+        <button class="w3-button w3-hover-green w3-round-large" type="submit">Login</button>
+        <br>
+    </form>
+</div>
+{% endblock%}

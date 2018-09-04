@@ -61,6 +61,7 @@ def load_port(port, f):
                 stock = row.rstrip('\n').split(',')
                 stock.insert(0, port)
                 stock = dict(zip(cols['raw'], stock))
+                stock['user'] = session['user']
                 add_stock(stock)
     except Exception as e:
         flash("Cannot open file because "+str(e))
@@ -122,3 +123,7 @@ def update_port(port_name):
         pass
 
     data.update_port(port)
+
+
+def is_user(user, password):
+    return password == data.is_user(user)

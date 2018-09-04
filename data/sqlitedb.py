@@ -25,10 +25,10 @@ class sqlitedb():
     def __del__(self):
         self.db.close()
 
-    def new(self, port):
+    def new(self, user, port):
         """ Create a new and empty portfolio """
         try:
-            self.c.execute(sql['new'], (port,))
+            self.c.execute(sql['new'], (user, port))
             self.db.commit()
         except sqlite3.Error as e:
             self.db.rollback()
@@ -69,29 +69,29 @@ class sqlitedb():
         except sqlite3.Error as e:
             flash("Can't get ports becuase "+str(e))
 
-    def stocks(self, port):
+    def stocks(self, user, port):
         """ Return a list of stock dicts """
         try:
-            self.c.execute(sql['stocks'], (port,))
+            self.c.execute(sql['stocks'], (user, port))
             port = self.c.fetchall()
             return [dict(zip(cols['stock'], stock)) for stock in port]
         except sqlite3.Error as e:
             flash("Can't get stocks because "+str(e))
 
-    def del_port(self, port):
+    def del_port(self, user, port):
         """ del a port from ports and stocks tables """
         try:
-            self.c.execute(sql['del_port'], (port,))
-            self.c.execute(sql['del_stocks'], (port,))
+            self.c.execute(sql['del_port'], (user, port))
+            self.c.execute(sql['del_stocks'], (user, port))
             self.db.commit()
         except sqlite3.Error as e:
             self.db.rollback()
             flash("Can't delete port because "+str(e))
 
-    def del_stock(self, port, stock):
+    def del_stock(self, user, port, stock):
         """ del one stock from a port """
         try:
-            self.c.execute(sql['del_stock'], (port, stock))
+            self.c.execute(sql['del_stock'], (user, port, stock))
             self.db.commit()
         except sqlite3.Error as e:
             self.db.rollback()
@@ -100,12 +100,23 @@ class sqlitedb():
     def update_stock(self, stock):
         """ update stock values """
         try:
-            self.c.execute(sql['upd_stock'],
-                           (stock['last'], stock['delta'], stock['percent'],
+            self.c.execute(sql['upd_stock'], (stock['user'],
+                           stock['last'], stock['delta'], stock['percent'],
                            stock['stamp'], stock['port'], stock['name']))
             self.db.commit()
         except Exception as e:
             flash("Can't update stock in db because "+str(e))
+
+    def is_user(self, user):
+        try:
+            self.c.execute("SELECT * FROM users WHERE\
+                            user=?", (user, ))
+            return self.c.fetchone()[1]
+        except sqlite3.Error as e:
+            flash("Database error: "+str(e))
+        except Exception as e:
+            return False
+
 
 if __name__ == '__main__':
     db = sqlitedb()
