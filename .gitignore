@@ -8,3 +8,8 @@ __pycache__
 database.db
 *.db-journal
 *.csv
+*.pyc
+bin/
+lib/
+pir.py
+share/
