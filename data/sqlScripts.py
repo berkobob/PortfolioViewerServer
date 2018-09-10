@@ -21,7 +21,7 @@ stockTable = """ CREATE TABLE IF NOT EXISTS stocks (
     )"""
 
 portTable = """ CREATE TABLE IF NOT EXISTS ports (
-    user text,                 /* User name of this user        */ 
+    user text,                 /* User name of this user        */
     port text,                 /* Porfolio name                 */
     positions integer,         /* How many stocks in portfolio  */
     paid real DEFAULT 0.0,     /* How much paid for portfolio   */
@@ -56,6 +56,7 @@ cols = {"stock": stock, "port": port, "raw": raw}
 
 new = "INSERT OR REPLACE INTO ports(user, port) values(?, ?)"        # n port
 add = "INSERT OR REPLACE INTO stocks(%s) VALUES(%s)"                 # a stock
+ports = "SELECT * FROM ports WHERE user=?"                           # g ports
 stocks = "SELECT * FROM stocks WHERE user=? AND port=?"              # g stocks
 del_port = "DELETE FROM ports WHERE user=? AND port=?"               # d port
 del_stocks = "DELETE FROM stocks WHERE user=? AND  port=?"           # d stocks
@@ -64,5 +65,5 @@ upd_stock = "UPDATE stocks SET last=?, delta=?, percent=?, stamp=? \
             where user=? AND port=? AND name=?"                      # u stock
 upd_port = "INSERT OR REPLACE INTO ports(%s) VALUES(%s)"             # u port
 sql = {"new": new, "add": add, "stocks": stocks, "del_port": del_port,
-       "del_stocks": del_stocks, "del_stock": del_stock,
+       "del_stocks": del_stocks, "del_stock": del_stock, "ports": ports,
        "upd_stock": upd_stock, "upd_port": upd_port}

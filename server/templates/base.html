@@ -11,11 +11,15 @@
         <div class="w3-left">
             <a class="w3-bar-item w3-button w3-mobile" href="/"><b>Portfolio Viewer</b></a>
         </div>
+        <div class="w3-right">
+            <a class="w3-bar-item w3-button w3-mobile w3-hide-small" href="/logout/">LOGOUT</a>
+        </div>
         {% block head1 %}
         {% endblock %}
         <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="myFunction()">&#9776;</a>
     </div>
     <div id="demo" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium">
+        <a class="w3-bar-item w3-button w3-mobile" href="/logout/">LOGOUT</a>
         {% block head2 %}
         {% endblock %}
     </div>

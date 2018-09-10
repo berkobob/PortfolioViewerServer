@@ -4,10 +4,9 @@ from flask import flash
 import re
 
 
-def ports():
+def ports(user):
     """ Return a list of port dicts with columns formatted """
-    ports = data.ports()
-
+    ports = data.ports(user)
     for port in ports:
         port['paid'] = '{:0,.0f}'.format(port['paid'])
         port['value'] = '£{:0,.0f}'.format(port['value'])
@@ -16,8 +15,12 @@ def ports():
         port['pofpaid'] = '{:0,.2f}%'.format(port['pofpaid'])
         port['delta'] = '£{:0,.2f}'.format(port['delta'])
         port['pofval'] = '{:0,.2f}%'.format(port['pofval'])
-
     return ports
+
+
+def new(user, port):
+    """ Create a new portfolio for this user """
+    data.new(user, port)
 
 
 def add_stock(stock):
@@ -52,7 +55,7 @@ def add_stock(stock):
     data.add(stock)
 
 
-def load_port(port, f):
+def load_port(user, port, f):
     """ import a file of raw stock data and make port full of these stocks """
     try:
         with open(f) as file:
@@ -61,30 +64,29 @@ def load_port(port, f):
                 stock = row.rstrip('\n').split(',')
                 stock.insert(0, port)
                 stock = dict(zip(cols['raw'], stock))
-                stock['user'] = session['user']
+                stock['user'] = user
                 add_stock(stock)
     except Exception as e:
         flash("Cannot open file because "+str(e))
 
-    update_stocks(port)
 
-
-def update_stocks(port):
+def update_stocks(user, port):
     """ Update port prices """
-    stocks = data.stocks(port)
+    stocks = data.stocks(user, port)
 
     for stock in stocks:
         try:
             stock = update_price(stock)
         except Exception as e:
-            flash("Could not get price for "+stock['name'])
+            flash("Could not get price for "+stock['name']+" because "+str(e))
         data.update_stock(stock)
-    update_port(port)
+
+    update_port(user, port)
 
 
-def get_port(port):
+def get_port(user, port):
     """ Return a formated list of stock dicts """
-    port = data.stocks(port)
+    port = data.stocks(user, port)
 
     for stock in port:
         stock['shares'] = '{:,d}'.format(stock['shares'])
@@ -101,12 +103,12 @@ def get_port(port):
     return(port)
 
 
-def update_port(port_name):
-    stocks = data.stocks(port_name)
+def update_port(user, port_name):
+    stocks = data.stocks(user, port_name)
 
     port = {'port': port_name, 'positions': 0, 'paid': 0.0, 'value': 0.0,
             'change': 0.0, 'percent': 0.0, 'delta': 0.0, 'pofpaid': 0.0,
-            'pofval': 0.0}
+            'pofval': 0.0, 'user': user}
 
     for stock in stocks:
         port['positions'] += 1
@@ -126,4 +128,15 @@ def update_port(port_name):
 
 
 def is_user(user, password):
+    """ Return True if password correct; otherwise False """
     return password == data.is_user(user)
+
+
+def del_port(user, port):
+    """ Delete this users port """
+    data.del_port(user, port)
+
+
+def del_stock(port, stock):
+    """ Delete this stock from this users port """
+    data.del_stock(port, stock)

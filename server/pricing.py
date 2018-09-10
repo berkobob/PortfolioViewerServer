@@ -20,6 +20,8 @@ def update_price(stock):
             stock['delta'] /= 100
         stock['percent'] = float(percent.replace('(', '').replace(')', '')
                                                          .replace('%', ''))
+        msg = "Pricing: Update {} to {}".format(stock['name'], stock['last'])
+        print(msg)
     else:
         msg = "{} failed to update".format(stock['name'])
         flash(msg)
@@ -30,7 +32,6 @@ def update_price(stock):
     else:
         stock['stamp'] = "None"
 
-    print("pricing. Updating:", stock['name'])
     return stock
 
 

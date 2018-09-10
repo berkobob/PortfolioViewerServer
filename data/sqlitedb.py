@@ -60,10 +60,10 @@ class sqlitedb():
             self.db.rollback()
             flash("Can't update port in db because "+str(e))
 
-    def ports(self):
+    def ports(self, user):
         """ Return a list of port dicts """
         try:
-            self.c.execute("SELECT * FROM ports")
+            self.c.execute(sql['ports'], (user,))
             ports = self.c.fetchall()
             return [dict(zip(cols['port'], port)) for port in ports]
         except sqlite3.Error as e:
@@ -88,10 +88,10 @@ class sqlitedb():
             self.db.rollback()
             flash("Can't delete port because "+str(e))
 
-    def del_stock(self, user, port, stock):
+    def del_stock(self, port, stock):
         """ del one stock from a port """
         try:
-            self.c.execute(sql['del_stock'], (user, port, stock))
+            self.c.execute(sql['del_stock'], (stock['user'], port, stock))
             self.db.commit()
         except sqlite3.Error as e:
             self.db.rollback()
@@ -100,9 +100,10 @@ class sqlitedb():
     def update_stock(self, stock):
         """ update stock values """
         try:
-            self.c.execute(sql['upd_stock'], (stock['user'],
+            self.c.execute(sql['upd_stock'], (
                            stock['last'], stock['delta'], stock['percent'],
-                           stock['stamp'], stock['port'], stock['name']))
+                           stock['stamp'], stock['user'], stock['port'],
+                           stock['name']))
             self.db.commit()
         except Exception as e:
             flash("Can't update stock in db because "+str(e))
