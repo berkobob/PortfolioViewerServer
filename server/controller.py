@@ -1,6 +1,6 @@
 from data import data, cols
 from server.pricing import update_price
-from flask import flash
+from flask import flash, session
 import re
 
 
@@ -84,9 +84,10 @@ def update_stocks(user, port):
     update_port(user, port)
 
 
-def get_port(user, port):
+def get_port(user, port, sort):
     """ Return a formated list of stock dicts """
     port = data.stocks(user, port)
+    port.sort(key=lambda stock: stock[sort], reverse=session['dir'])
 
     for stock in port:
         stock['shares'] = '{:,d}'.format(stock['shares'])

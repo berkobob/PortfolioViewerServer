@@ -39,8 +39,7 @@ def view_port(port, sort='name'):
         # Here not in controller.add_stock to just do it once per load
         controller.update_stocks(session['user'], port)
 
-    stocks = controller.get_port(session['user'], port)
-    stocks.sort(key=lambda stock: stock[sort], reverse=session['dir'])
+    stocks = controller.get_port(session['user'], port, sort)
     return render_template('port.html', tickers=stocks, page=port)
 
 
